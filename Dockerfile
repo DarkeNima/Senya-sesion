@@ -1,4 +1,4 @@
-FROM node:lts-bookworm
+FROM node:18-bullseye
 
 RUN apt-get update && \
   apt-get install -y \
@@ -16,6 +16,6 @@ RUN npm install && npm install -g qrcode-terminal pm2
 
 COPY . .
 
-EXPOSE 5000
+EXPOSE 8000
 
-CMD ["npm", "start"]
+CMD ["node", "index.js"]
