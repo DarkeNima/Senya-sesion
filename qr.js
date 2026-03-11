@@ -109,7 +109,7 @@ showAdAttribution: true
                     await removeFile('./temp/' + id);
                     console.log(`👤 ${sock.user.id} 𝗖𝗼𝗻𝗻𝗲𝗰𝘁𝗲𝗱 ✅ 𝗥𝗲𝘀𝘁𝗮𝗿𝘁𝗶𝗻𝗴 𝗽𝗿𝗼𝗰𝗲𝘀𝘀...`);
                     await delay(10);
-                    process.exit();
+                    // process.exit(); // disabled for Railway
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode != 401) {
                     await delay(10);
                     GIFTED_MD_PAIR_CODE();
