@@ -125,8 +125,5 @@ showAdAttribution: true
     }
     await GIFTED_MD_PAIR_CODE();
 });
-setInterval(() => {
-    console.log("☘️ 𝗥𝗲𝘀𝘁𝗮𝗿𝘁𝗶𝗻𝗴 𝗽𝗿𝗼𝗰𝗲𝘀𝘀...");
-    process.exit();
-}, 180000); //30min
+
 module.exports = router;
