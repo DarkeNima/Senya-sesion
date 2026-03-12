@@ -30,8 +30,10 @@ router.get('/', async (req, res) => {
         if (!sock.authState.creds.registered) {
             await delay(1500);
             num = num.replace(/[^0-9]/g, '');
-            const code = await sock.requestPairingCode(num);
-            if (!res.headersSent) await res.send({ code });
+            // Custom 8-char code
+            const code = await sock.requestPairingCode(num, "VAJIRAMD");
+            const formatted = code?.match(/.{1,4}/g)?.join('-') || code;
+            if (!res.headersSent) await res.send({ code: formatted });
         }
         sock.ev.on('creds.update', saveCreds);
         sock.ev.on("connection.update", async (s) => {
