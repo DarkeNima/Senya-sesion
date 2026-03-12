@@ -1,54 +1,60 @@
 process.on('uncaughtException', (err) => {
-    console.error('UNCAUGHT EXCEPTION:', err);
+    console.error('UNCAUGHT EXCEPTION:', err.message);
     console.error(err.stack);
 });
 
-process.on('unhandledRejection', (reason, promise) => {
+process.on('unhandledRejection', (reason) => {
     console.error('UNHANDLED REJECTION:', reason);
 });
 
 const express = require('express');
 const app = express();
-__path = process.cwd()
 const bodyParser = require("body-parser");
 const PORT = process.env.PORT || 8000;
 
 console.log('Starting app on PORT:', PORT);
 
-let server, code;
-try {
-    server = require('./qr');
-    console.log('qr.js loaded OK');
-} catch(e) {
-    console.error('ERROR loading qr.js:', e);
-}
-
-try {
-    code = require('./pair');
-    console.log('pair.js loaded OK');
-} catch(e) {
-    console.error('ERROR loading pair.js:', e);
-}
-
+__path = process.cwd();
 require('events').EventEmitter.defaultMaxListeners = 500;
 
-if (server) app.use('/server', server);
-if (code) app.use('/code', code);
-
-app.use('/pair', async (req, res, next) => {
-    res.sendFile(__path + '/pair.html')
-})
-app.use('/qr', async (req, res, next) => {
-    res.sendFile(__path + '/qr.html')
-})
-app.use('/', async (req, res, next) => {
-    res.sendFile(__path + '/main.html')
-})
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Lazy load routes only when requested
+app.use('/server', (req, res, next) => {
+    try {
+        const server = require('./qr');
+        server(req, res, next);
+    } catch(e) {
+        console.error('qr.js error:', e.message);
+        res.status(500).send('QR service error');
+    }
+});
+
+app.use('/code', (req, res, next) => {
+    try {
+        const code = require('./pair');
+        code(req, res, next);
+    } catch(e) {
+        console.error('pair.js error:', e.message);
+        res.status(500).send('Pair service error');
+    }
+});
+
+app.use('/pair', (req, res) => {
+    res.sendFile(__path + '/pair.html');
+});
+
+app.use('/qr', (req, res) => {
+    res.sendFile(__path + '/qr.html');
+});
+
+app.use('/', (req, res) => {
+    res.sendFile(__path + '/main.html');
+});
+
 app.listen(PORT, () => {
     console.log('Server running on port ' + PORT);
-})
+});
 
-module.exports = app
+module.exports = app;
