@@ -4,12 +4,9 @@ const QRCode = require('qrcode');
 const fs = require('fs');
 const pino = require("pino");
 const { upload } = require('./mega');
-const {
-    default: makeWASocket,
-    useMultiFileAuthState,
-    delay,
-    Browsers,
-} = require("baileyz");
+const baileyz = require("baileyz");
+const makeWASocket = baileyz.default || baileyz.makeWASocket;
+const { useMultiFileAuthState, delay } = baileyz;
 let router = express.Router();
 
 function removeFile(FilePath) {
@@ -25,7 +22,7 @@ router.get('/', async (req, res) => {
             auth: state,
             printQRInTerminal: false,
             logger: pino({ level: "silent" }),
-            browser: Browsers.macOS("Desktop"),
+            browser: ["Ubuntu", "Chrome", "20.0.04"],
         });
         sock.ev.on('creds.update', saveCreds);
         sock.ev.on("connection.update", async (s) => {
