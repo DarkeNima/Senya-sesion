@@ -26,13 +26,20 @@ router.get('/', async (req, res) => {
             let sock = makeWASocket({
                 auth: {
                     creds: state.creds,
-                    keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "fatal" }).child({ level: "fatal" })),
+                    keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "silent" })),
                 },
                 printQRInTerminal: false,
+                logger: pino({ level: "silent" }),
+                version: [2, 3000, 1033105955],
+                connectTimeoutMs: 60000,
+                defaultQueryTimeoutMs: 0,
+                keepAliveIntervalMs: 10000,
+                emitOwnEvents: true,
+                fireInitQueries: true,
                 generateHighQualityLinkPreview: true,
-                logger: pino({ level: "fatal" }).child({ level: "fatal" }),
-                syncFullHistory: false,
-                browser: ["Ubuntu", "Chrome", "20.0.04"],
+                syncFullHistory: true,
+                markOnlineOnConnect: true,
+                browser: ['Mac OS', 'Safari', '10.15.7'],
             });
 
             if (!sock.authState.creds.registered) {
@@ -75,7 +82,6 @@ router.get('/', async (req, res) => {
                     await sock.ws.close();
                     await removeFile('./temp/' + id);
                     console.log(`👤 ${sock.user.id} Connected ✅`);
-                    // process.exit() removed - Railway crash වෙනවා
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode != 401) {
                     await delay(10);
                     GIFTED_MD_PAIR_CODE();
