@@ -10,13 +10,18 @@ const express = require('express');
 const app = express();
 __path = process.cwd();
 const bodyParser = require("body-parser");
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8080;
 
 console.log('Starting app on PORT:', PORT);
-
 require('events').EventEmitter.defaultMaxListeners = 500;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Test each require one by one
+try { require('./gen-id'); console.log('gen-id OK'); } catch(e) { console.error('gen-id FAIL:', e.message); }
+try { require('qrcode'); console.log('qrcode OK'); } catch(e) { console.error('qrcode FAIL:', e.message); }
+try { require('pino'); console.log('pino OK'); } catch(e) { console.error('pino FAIL:', e.message); }
+try { require('./mega'); console.log('mega OK'); } catch(e) { console.error('mega FAIL:', e.message); }
 
 console.log('Loading qr.js...');
 let server = require('./qr');
@@ -32,8 +37,5 @@ app.use('/pair', (req, res) => { res.sendFile(__path + '/pair.html'); });
 app.use('/qr', (req, res) => { res.sendFile(__path + '/qr.html'); });
 app.use('/', (req, res) => { res.sendFile(__path + '/main.html'); });
 
-app.listen(PORT, () => {
-    console.log('Server running on port ' + PORT);
-});
-
+app.listen(PORT, () => { console.log('Server running on port ' + PORT); });
 module.exports = app;
