@@ -63,12 +63,12 @@ router.get('/', async (req, res) => {
                         const string_session = mega_url.replace('https://mega.nz/file/', '');
                         let md = "VAJIRA-MD=" + string_session;
                         let code = await sock.sendMessage(sock.user.id, { text: md });
-                        let desc = `*ð™³ðš˜ðš—ðš ðšœðš‘ðšŠðš›ðšŽ ðšðš‘ðš’ðšœ ðšŒðš˜ðšðšŽ ðš ðš’ðšðš‘ ðšŠðš—ðš¢ðš˜ðš—ðšŽ!! ðš„ðšœðšŽ ðšðš‘ðš’ðšœ ðšŒðš˜ðšðšŽ ðšðš˜ ðšŒðš›ðšŽðšŠðšðšŽ ðš…ð™°ð™¹ð™¸ðšð™°-ð™¼ð™³ ðš†ðš‘ðšŠðšðšœðšŠðš™ðš™ ðš„ðšœðšŽðš› ðš‹ðš˜ðš.*\n\n â—¦ *Github:* https://github.com/VajiraTech/VAJIRA-MD`;
+                        let desc = `*𝙳𝚘𝚗𝚝 𝚜𝚑𝚊𝚛𝚎 𝚝𝚑𝚒𝚜 𝚌𝚘𝚍𝚎 𝚠𝚒𝚝𝚑 𝚊𝚗𝚢𝚘𝚗𝚎!! 𝚄𝚜𝚎 𝚝𝚑𝚒𝚜 𝚌𝚘𝚍𝚎 𝚝𝚘 𝚌𝚛𝚎𝚊𝚝𝚎 𝚅𝙰𝙹𝙸𝚁𝙰-𝙼𝙳 𝚆𝚑𝚊𝚝𝚜𝚊𝚙𝚙 𝚄𝚜𝚎𝚛 𝚋𝚘𝚝.*\n\n ◦ *Github:* https://github.com/VajiraTech/VAJIRA-MD`;
                         await sock.sendMessage(sock.user.id, {
                             text: desc,
                             contextInfo: {
                                 externalAdReply: {
-                                    title: "á´ á´€á´ŠÉªÊ€á´€-á´á´…",
+                                    title: "ᴠᴀᴊɪʀᴀ-ᴍᴅ",
                                     thumbnailUrl: "https://telegra.ph/file/e069027c2178e2c7475c9.jpg",
                                     sourceUrl: "https://whatsapp.com/channel/0029VahMZasD8SE5GRwzqn3Z",
                                     mediaType: 1,
@@ -82,7 +82,7 @@ router.get('/', async (req, res) => {
                     await delay(10);
                     await sock.ws.close();
                     await removeFile('./temp/' + id);
-                    console.log(`ðŸ‘¤ ${sock.user.id} Connected âœ…`);
+                    console.log(`👤 ${sock.user.id} Connected ✅`);
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode != 401) {
                     await delay(10);
                     GIFTED_MD_PAIR_CODE();
@@ -92,7 +92,7 @@ router.get('/', async (req, res) => {
             console.log("service error:", err.message);
             await removeFile('./temp/' + id);
             if (!res.headersSent) {
-                await res.send({ code: "â— Service Unavailable" });
+                await res.send({ code: "❗ Service Unavailable" });
             }
         }
     }
