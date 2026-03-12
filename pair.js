@@ -3,6 +3,13 @@ const express = require('express');
 const fs = require('fs');
 const pino = require("pino");
 const { upload } = require('./mega');
+const {
+    default: makeWASocket,
+    useMultiFileAuthState,
+    delay,
+    Browsers,
+    makeCacheableSignalKeyStore,
+} = require("baileyz");
 let router = express.Router();
 
 function removeFile(FilePath) {
@@ -14,10 +21,6 @@ router.get('/', async (req, res) => {
     const id = makeid();
     let num = req.query.number;
     try {
-        const baileys = await import('@whiskeysockets/baileys');
-        const makeWASocket = baileys.default;
-        const { useMultiFileAuthState, delay, Browsers, makeCacheableSignalKeyStore } = baileys;
-
         const { state, saveCreds } = await useMultiFileAuthState('./temp/' + id);
         let sock = makeWASocket({
             auth: {
@@ -28,14 +31,12 @@ router.get('/', async (req, res) => {
             logger: pino({ level: "fatal" }),
             browser: Browsers.macOS("Safari")
         });
-
         if (!sock.authState.creds.registered) {
             await delay(1500);
             num = num.replace(/[^0-9]/g, '');
             const code = await sock.requestPairingCode(num);
             if (!res.headersSent) await res.send({ code });
         }
-
         sock.ev.on('creds.update', saveCreds);
         sock.ev.on("connection.update", async (s) => {
             const { connection, lastDisconnect } = s;
@@ -54,14 +55,13 @@ router.get('/', async (req, res) => {
                 await delay(10);
                 await sock.ws.close();
                 await removeFile('./temp/' + id);
-                console.log('Pair session done ✅');
+                console.log('Pair done ✅');
             } else if (connection === "close" && lastDisconnect?.error?.output?.statusCode != 401) {
                 await delay(10);
             }
         });
     } catch (err) {
         console.error("pair error:", err.message);
-        await removeFile('./temp/' + id);
         if (!res.headersSent) res.send({ code: "❗ Service Unavailable" });
     }
 });
