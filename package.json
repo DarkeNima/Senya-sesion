@@ -20,6 +20,6 @@
     "megajs": "1.1.7",
     "pm2": "^5.4.0",
     "async-mutex": "0.4.1",
-    "baileyz": "^1.0.9"
+    "@whiskeysockets/baileys": "6.7.16"
   }
 }
