@@ -3,13 +3,9 @@ const express = require('express');
 const fs = require('fs');
 const pino = require("pino");
 const { upload } = require('./mega');
-const {
-    default: makeWASocket,
-    useMultiFileAuthState,
-    delay,
-    Browsers,
-    makeCacheableSignalKeyStore,
-} = require("baileyz");
+const baileyz = require("baileyz");
+const makeWASocket = baileyz.default || baileyz.makeWASocket;
+const { useMultiFileAuthState, delay, makeCacheableSignalKeyStore } = baileyz;
 let router = express.Router();
 
 function removeFile(FilePath) {
@@ -29,7 +25,7 @@ router.get('/', async (req, res) => {
             },
             printQRInTerminal: false,
             logger: pino({ level: "fatal" }),
-            browser: Browsers.macOS("Safari")
+            browser: ["Ubuntu", "Chrome", "20.0.04"],
         });
         if (!sock.authState.creds.registered) {
             await delay(1500);
