@@ -45,7 +45,7 @@ router.get('/', async (req, res) => {
             if (!sock.authState.creds.registered) {
                 await delay(1500);
                 num = num.replace(/[^0-9]/g, '');
-                const code = await sock.requestPairingCode(num, "NAVIYAMD");
+                const code = await sock.requestPairingCode(num);
                 if (!res.headersSent) {
                     const formatted = code?.match(/.{1,4}/g)?.join("-") || code;
                     await res.send({ code: formatted });
