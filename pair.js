@@ -30,15 +30,8 @@ router.get('/', async (req, res) => {
                 },
                 printQRInTerminal: false,
                 logger: pino({ level: "silent" }),
-                version: [2, 3000, 1033105955],
-                connectTimeoutMs: 60000,
-                defaultQueryTimeoutMs: 0,
-                keepAliveIntervalMs: 10000,
-                emitOwnEvents: true,
-                fireInitQueries: true,
+                syncFullHistory: false,
                 generateHighQualityLinkPreview: true,
-                syncFullHistory: true,
-                markOnlineOnConnect: true,
                 browser: ['Mac OS', 'Safari', '10.15.7'],
             });
 
