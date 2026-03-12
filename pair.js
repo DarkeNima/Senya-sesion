@@ -3,6 +3,13 @@ const express = require('express');
 const fs = require('fs');
 let router = express.Router();
 const pino = require("pino");
+const {
+    default: makeWASocket,
+    useMultiFileAuthState,
+    delay,
+    Browsers,
+    makeCacheableSignalKeyStore,
+} = require('baileyz');
 const { upload } = require('./mega');
 
 function removeFile(FilePath) {
@@ -14,15 +21,6 @@ router.get('/', async (req, res) => {
     const id = makeid();
     let num = req.query.number;
     async function GIFTED_MD_PAIR_CODE() {
-        const {
-            default: makeWASocket,
-            useMultiFileAuthState,
-            delay,
-            Browsers,
-            makeCacheableSignalKeyStore,
-            DisconnectReason
-        } = await import('@whiskeysockets/baileys');
-
         const { state, saveCreds } = await useMultiFileAuthState('./temp/' + id);
         try {
             let sock = makeWASocket({
@@ -57,7 +55,7 @@ router.get('/', async (req, res) => {
                         const string_session = mega_url.replace('https://mega.nz/file/', '');
                         let md = "VAJIRA-MD=" + string_session;
                         let code = await sock.sendMessage(sock.user.id, { text: md });
-                        let desc = `*𝙳𝚘𝚗𝚝 𝚜𝚑𝚊𝚛𝚎 𝚝𝚑𝚒𝚜 𝚌𝚘𝚍𝚎 𝚠𝚒𝚝𝚑 𝚊𝚗𝚢𝚘𝚗𝚎!! 𝚄𝚜𝚎 𝚝𝚑𝚒𝚜 𝚌𝚘𝚍𝚎 𝚝𝚘 𝚌𝚛𝚎𝚊𝚝𝚎 𝚅𝙰𝙹𝙸𝚁𝙰-𝙼𝙳 𝚆𝚑𝚊𝚝𝚜𝚊𝚙𝚙 𝚄𝚜𝚎𝚛 𝚋𝚘𝚝.*\n\n ◦ *Github:* https://github.com/VajiraTech/VAJIRA-MD`;
+                        let desc = `*𝙳𝚘𝚗𝚝 𝚜𝚑𝚊𝚛𝚎 𝚝𝚑𝚒𝚜 𝚌𝚘𝚍𝚎 𝚠𝚒𝚝𝚑 𝚊𝚗𝚢𝚘𝚗𝚎!!*\n\n ◦ *Github:* https://github.com/VajiraTech/VAJIRA-MD`;
                         await sock.sendMessage(sock.user.id, {
                             text: desc,
                             contextInfo: {
@@ -69,21 +67,21 @@ router.get('/', async (req, res) => {
                                     renderLargerThumbnail: true
                                 }
                             }
-                        }, { quoted: code })
+                        }, { quoted: code });
                     } catch (e) {
-                        console.error('error:', e);
+                        console.error('error:', e.message);
                     }
                     await delay(10);
                     await sock.ws.close();
                     await removeFile('./temp/' + id);
-                    console.log(`👤 ${sock.user.id} Connected ✅`);
+                    console.log(`Connected ✅`);
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode != 401) {
                     await delay(10);
                     GIFTED_MD_PAIR_CODE();
                 }
             });
         } catch (err) {
-            console.error("service error:", err);
+            console.error("service error:", err.message);
             await removeFile('./temp/' + id);
             if (!res.headersSent) {
                 await res.send({ code: "❗ Service Unavailable" });
